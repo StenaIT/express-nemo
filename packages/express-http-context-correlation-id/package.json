@@ -1,23 +1,20 @@
 {
   "name": "express-http-context-correlation-id",
   "version": "0.1.0",
-  "description": "A middleware for express extending requests with a correlation id",
+  "description":
+    "A middleware for express, extending requests with a correlation id",
   "main": "index.js",
   "scripts": {
-    "test": "mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --slow 10",
-    "test:watch": "mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --watch --slow 10"
+    "test":
+      "mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --slow 10",
+    "test:watch":
+      "mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --watch --slow 10"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/StenaIT/express-http-context.git"
   },
-  "keywords": [
-    "stena",
-    "express",
-    "middleware",
-    "http",
-    "correlationid"
-  ],
+  "keywords": ["stena", "express", "middleware", "http", "correlationid"],
   "author": "Giorgio Salmi <giorgio.salmi@stena.com>",
   "license": "MIT",
   "bugs": {
