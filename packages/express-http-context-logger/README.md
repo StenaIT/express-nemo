@@ -4,6 +4,6 @@ A middleware for express, extending requests with a logger instance of your choi
 
 ## Options
 
-| Name          | Required | Default value | Description                                                                       |
-| ------------- | -------- | ------------- | --------------------------------------------------------------------------------- |
-| loggerFactory | Yes      | null          | A function receiving the request and response object, returning a logger instance |
+| Name          | Required | Default value | Description                                                                        |
+| ------------- | -------- | ------------- | ---------------------------------------------------------------------------------- |
+| loggerFactory | Yes      | null          | A function receiving the request and response object, returning a logger instance. |

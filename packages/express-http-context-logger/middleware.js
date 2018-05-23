@@ -4,7 +4,7 @@ module.exports = options => {
   options = { ...defaults, ...options }
 
   if (!options.loggerFactory || typeof options.loggerFactory !== 'function') {
-    throw new Error('Missing logger factory function')
+    throw new Error('[Options] Missing logger factory function')
   }
 
   const middleware = (req, res, next) => {

@@ -1,14 +1,11 @@
 {
   "name": "express-http-context-request-response-logging",
   "version": "0.1.0",
-  "description":
-    "A middleware for express, adding request and response logging",
+  "description": "A middleware for express, adding request and response logging",
   "main": "index.js",
   "scripts": {
-    "test":
-      "mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --slow 10",
-    "test:watch":
-      "mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --watch --slow 10"
+    "test": "mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --slow 10",
+    "test:watch": "mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --watch --slow 10"
   },
   "repository": {
     "type": "git",
