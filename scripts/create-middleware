@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+declare name="${1}"
+
+while [[ -z ${name} ]]; do
+  read -p 'Name: ' name
+done
+
+echo "Setting up new middleware ${name}"
+
+declare -r package_dir="./packages/${name:?}"
+
+mkdir "${package_dir:?}"
+echo '{
+  "plugins": ["standard"],
+  "rules": {
+    "jsx-quotes": ["error", "prefer-single"]
+  },
+  "extends": ["standard"]
+}
+' > "${package_dir:?}/.eslintrc.json" || exit
+
+cd "${package_dir:?}" || exit
+npm init
+
+echo 'Setting up linters'
+npm install --save-dev eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node prettier-eslint
+
+echo 'Setting up test harness'
+npm install --save-dev mocha chai
+cd -
+
+echo 'Creating boilerplate'
+
+echo "const middleware = require('./middleware.js')
+module.exports = middleware
+
+" > "${package_dir:?}/index.js"
+
+echo "module.exports = (req, res, next) => {
+  next()
+}
+" > "${package_dir:?}/middleware.js"
+
+echo "const expect = require('chai').expect
+const SUT = require('./middleware')
+
+describe('${name}', () => {
+  it('has a test', () => {
+    expect(true).to.equal(true)
+  })
+})
+" > "${package_dir:?}/middleware.spec.js"
+
+echo
+echo 'NOTE: Add the following lines as npm scripts'
+echo
+echo "    \"test\": \"mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --slow 10\","
+echo "    \"test:watch\": \"mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --watch --slow 10\""
