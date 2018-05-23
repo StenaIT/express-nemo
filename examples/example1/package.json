@@ -1,0 +1,12 @@
+{
+  "name": "example1",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
