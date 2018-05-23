@@ -1,13 +1,6 @@
 const expect = require('chai').expect
 const middleware = require('./middleware')
 
-const inner = (req, res) => {
-  res.body = {}
-  res.getHeader = name => {
-    return 'application/json'
-  }
-}
-
 describe('express-http-context-correlation-id', () => {
   let nextCalled = false
 
