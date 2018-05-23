@@ -32,6 +32,10 @@ cd -
 
 echo 'Creating boilerplate'
 
+echo "# ${name:?}
+
+" > "${package_dir:?}/README.md"
+
 echo "const middleware = require('./middleware.js')
 module.exports = middleware
 
