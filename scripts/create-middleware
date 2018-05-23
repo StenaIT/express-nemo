@@ -43,7 +43,7 @@ echo "module.exports = (req, res, next) => {
 " > "${package_dir:?}/middleware.js"
 
 echo "const expect = require('chai').expect
-const SUT = require('./middleware')
+const middleware = require('./middleware')
 
 describe('${name}', () => {
   it('has a test', () => {
