@@ -34,6 +34,13 @@ echo 'Creating boilerplate'
 
 echo "# ${name:?}
 
+...
+
+## Options
+
+| Name | Required | Default value | Description |
+| ---- | -------- | ------------- | ----------- |
+| -    | -        | -             | -           |
 " > "${package_dir:?}/README.md"
 
 echo "const middleware = require('./middleware.js')
