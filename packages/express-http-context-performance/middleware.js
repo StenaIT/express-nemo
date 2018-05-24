@@ -3,6 +3,17 @@ const perfy = require('perfy')
 
 const defaults = {}
 
+const handleEnd = (req, res, next) => {
+  const trackingId =
+    req.context && req.context.performance
+      ? req.context.performance.trackingId
+      : null
+
+  if (trackingId) {
+    req.context.performance.timing = perfy.end(trackingId)
+  }
+}
+
 module.exports = options => {
   options = { ...defaults, ...options }
 
@@ -19,18 +30,16 @@ module.exports = options => {
 
       next()
     },
-    end: (req, res, next) => {
-      const trackingId =
-        req.context && req.context.performance
-          ? req.context.performance.trackingId
-          : null
-
-      if (trackingId) {
-        req.context.performance.timing = perfy.end(trackingId)
+    end: [
+      (err, req, res, next) => {
+        handleEnd(req, res, next)
+        next(err)
+      },
+      (req, res, next) => {
+        handleEnd(req, res, next)
+        next()
       }
-
-      next()
-    }
+    ]
   }
 
   middleware.options = options
