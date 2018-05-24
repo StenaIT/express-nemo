@@ -35,7 +35,5 @@
     "mocha": "^5.2.0",
     "prettier-eslint": "^8.8.1"
   },
-  "dependencies": {
-    "deep-extend": "^0.6.0"
-  }
+  "dependencies": {}
 }

@@ -5,6 +5,7 @@ const expressHttpContextCorrelationId = require('../../packages/express-http-con
 const expressHttpContextLogger = require('../../packages/express-http-context-logger')
 const expressHttpContextRequestResponseLogging = require('../../packages/express-http-context-request-response-logging')
 const expressHttpContextPerformace = require('../../packages/express-http-context-performance')
+const expressHttpContextErrorResponse = require('../../packages/express-http-context-error-response')
 const performanceMonitor = expressHttpContextPerformace()
 
 const PORT = process.env.PORT || 4000
@@ -17,6 +18,10 @@ router.get('/', (req, res, next) => {
   next()
 })
 
+router.get('/error', (req, res, next) => {
+  throw Error('A very bad error')
+})
+
 const server = express()
 
 server
@@ -24,6 +29,7 @@ server
   .use(expressHttpContextCorrelationId())
   .use(expressHttpContextLogger({ loggerFactory: (req, res) => console }))
   .use('/', router)
+  .use(expressHttpContextErrorResponse())
   .use(performanceMonitor.end)
   .use(
     expressHttpContextRequestResponseLogging({

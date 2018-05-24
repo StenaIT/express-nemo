@@ -11,12 +11,10 @@ describe('express-http-context-error-response', () => {
   let res = {
     status: code => {
       sendCalledWithCode = code
-      return {
-        send: m => {
-          sendCalled = true
-          messages.push(m)
-        }
-      }
+    },
+    send: m => {
+      sendCalled = true
+      messages.push(m)
     }
   }
 
