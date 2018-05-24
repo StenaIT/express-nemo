@@ -1,7 +1,7 @@
 {
   "name": "express-http-context-error-logging",
   "version": "1.0.0",
-  "description": "A middleware for express to add error logging.",
+  "description": "A middleware for express to add error logging",
   "main": "index.js",
   "scripts": {
     "test": "mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --slow 10",
@@ -35,7 +35,5 @@
     "mocha": "^5.2.0",
     "prettier-eslint": "^8.8.1"
   },
-  "dependencies": {
-    "deep-extend": "^0.6.0"
-  }
+  "dependencies": {}
 }

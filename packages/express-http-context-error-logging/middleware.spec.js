@@ -8,8 +8,8 @@ describe('express-http-context-error-logging', () => {
   let res = {}
   let logs = []
 
-  const next = () => {
-    nextCalled = true
+  const next = err => {
+    nextCalled = !!err
   }
 
   beforeEach(() => {

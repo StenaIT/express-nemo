@@ -6,6 +6,7 @@ const expressHttpContextLogger = require('../../packages/express-http-context-lo
 const expressHttpContextRequestResponseLogging = require('../../packages/express-http-context-request-response-logging')
 const expressHttpContextPerformace = require('../../packages/express-http-context-performance')
 const expressHttpContextErrorResponse = require('../../packages/express-http-context-error-response')
+const expressHttpContextErrorLogging = require('../../packages/express-http-context-error-logging')
 const performanceMonitor = expressHttpContextPerformace()
 
 const PORT = process.env.PORT || 4000
@@ -19,7 +20,7 @@ router.get('/', (req, res, next) => {
 })
 
 router.get('/error', (req, res, next) => {
-  throw Error('A very bad error')
+  throw new Error('A very bad error')
 })
 
 const server = express()
@@ -29,14 +30,19 @@ server
   .use(expressHttpContextCorrelationId())
   .use(expressHttpContextLogger({ loggerFactory: (req, res) => console }))
   .use('/', router)
-  .use(expressHttpContextErrorResponse())
   .use(performanceMonitor.end)
+  .use(expressHttpContextErrorLogging())
+  .use(expressHttpContextErrorResponse())
   .use(
     expressHttpContextRequestResponseLogging({
       logEventFactory: (req, res) => {
-        return `${req.method} ${req.url} - HTTP ${res.statusCode} (time ${
-          req.context.performance.timing.time
-        } s.ms)`
+        const time =
+          req.context &&
+          req.context.performance &&
+          req.context.performance.timing
+            ? ` (time ${req.context.performance.timing.time} s.ms)`
+            : ''
+        return `${req.method} ${req.url} - HTTP ${res.statusCode}${time}`
       }
     })
   )
