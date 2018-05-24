@@ -1,4 +1,4 @@
-# express-http-context-correlation-id
+# express-nemo-correlation-id
 
 A middleware for express, extending requests with a correlation id
 

@@ -1,4 +1,4 @@
-# express-http-context-logger
+# express-nemo-logger
 
 A middleware for express, extending requests with a logger instance of your choice
 

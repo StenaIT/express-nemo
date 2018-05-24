@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const middleware = require('./middleware')
 
-describe('express-http-context-error-response', () => {
+describe('express-nemo-error-response', () => {
   let nextCalled = false
   let sendCalled = false
   let sendCalledWithCode = null

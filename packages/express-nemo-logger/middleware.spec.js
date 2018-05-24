@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const middleware = require('./middleware')
 
-describe('express-http-context-logger', () => {
+describe('express-nemo-logger', () => {
   context('invalid configuration', () => {
     context('when no logger factory is provided', () => {
       it('throws an error', () => {
