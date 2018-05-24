@@ -6,6 +6,7 @@ A collection of middlewares for express
 
 - [express-http-context-correlation-id](packages/express-http-context-correlation-id/)
 - [express-http-context-logger](packages/express-http-context-logger/)
+- [express-http-context-request-response-logging](packages/express-http-context-request-response-logging/)
 
 ## Sematic versioning
 
