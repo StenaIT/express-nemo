@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const middleware = require('./middleware')
 
-describe('express-http-context-performance', () => {
+describe('express-nemo-performance', () => {
   context('valid configuration', () => {
     context('minimum configuration', () => {
       it('returns middleware with options exposed', () => {

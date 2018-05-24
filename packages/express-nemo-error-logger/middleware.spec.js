@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const middleware = require('./middleware')
 
-describe('express-http-context-error-logging', () => {
+describe('express-nemo-error-logger', () => {
   let nextCalled = false
   let err = new Error('Test error')
   let req = { url: '/api/path' }

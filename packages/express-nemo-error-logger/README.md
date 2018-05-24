@@ -1,6 +1,6 @@
-# express-http-context-error-logging
+# express-nemo-error-logger
 
-A middleware for express to add error logging
+A middleware for express to add error logger
 
 ## Options
 

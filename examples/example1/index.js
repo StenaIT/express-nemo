@@ -1,12 +1,12 @@
 const express = require('express')
 const router = express.Router()
 
-const expressHttpContextCorrelationId = require('../../packages/express-http-context-correlation-id')
-const expressHttpContextLogger = require('../../packages/express-http-context-logger')
-const expressHttpContextRequestResponseLogging = require('../../packages/express-http-context-request-response-logging')
-const expressHttpContextPerformace = require('../../packages/express-http-context-performance')
-const expressHttpContextErrorResponse = require('../../packages/express-http-context-error-response')
-const expressHttpContextErrorLogging = require('../../packages/express-http-context-error-logging')
+const expressHttpContextCorrelationId = require('../../packages/express-nemo-correlation-id')
+const expressHttpContextLogger = require('../../packages/express-nemo-logger')
+const expressHttpContextRequestResponseLogger = require('../../packages/express-nemo-request-response-logger')
+const expressHttpContextPerformace = require('../../packages/express-nemo-performance')
+const expressHttpContextErrorResponse = require('../../packages/express-nemo-error-response')
+const expressHttpContextErrorLogger = require('../../packages/express-nemo-error-logger')
 const performanceMonitor = expressHttpContextPerformace()
 
 const PORT = process.env.PORT || 4000
@@ -31,10 +31,10 @@ server
   .use(expressHttpContextLogger({ loggerFactory: (req, res) => console }))
   .use('/', router)
   .use(performanceMonitor.end)
-  .use(expressHttpContextErrorLogging())
+  .use(expressHttpContextErrorLogger())
   .use(expressHttpContextErrorResponse())
   .use(
-    expressHttpContextRequestResponseLogging({
+    expressHttpContextRequestResponseLogger({
       logEventFactory: (req, res) => {
         const time =
           req.context &&

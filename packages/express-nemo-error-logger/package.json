@@ -1,7 +1,7 @@
 {
-  "name": "express-http-context-error-response",
+  "name": "express-nemo-error-logger",
   "version": "1.0.0",
-  "description": "A middleware for express to add error response",
+  "description": "A middleware for express to add error logging",
   "main": "index.js",
   "scripts": {
     "test": "mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --slow 10",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/StenaIT/express-http-context.git"
+    "url": "git+https://github.com/StenaIT/express-nemo.git"
   },
   "keywords": [
     "stena",
@@ -17,14 +17,14 @@
     "middleware",
     "http",
     "error",
-    "response"
+    "logging"
   ],
   "author": "giorgio.salmi@stena.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/StenaIT/express-http-context/issues"
+    "url": "https://github.com/StenaIT/express-nemo/issues"
   },
-  "homepage": "https://github.com/StenaIT/express-http-context#readme",
+  "homepage": "https://github.com/StenaIT/express-nemo#readme",
   "devDependencies": {
     "chai": "^4.1.2",
     "eslint-config-standard": "^11.0.0",

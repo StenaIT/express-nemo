@@ -1,15 +1,15 @@
-# express-http-context
+# express-nemo
 
 A collection of middlewares for express
 
 ## Packages
 
-- [express-http-context-correlation-id](packages/express-http-context-correlation-id/)
-- [express-http-context-error-logging](packages/express-http-context-error-logging/)
-- [express-http-context-error-response](packages/express-http-context-error-response/)
-- [express-http-context-logger](packages/express-http-context-logger/)
-- [express-http-context-performance](packages/express-http-context-performance/)
-- [express-http-context-request-response-logging](packages/express-http-context-request-response-logging/)
+- [express-nemo-correlation-id](packages/express-nemo-correlation-id/)
+- [express-nemo-error-logger](packages/express-nemo-error-logger/)
+- [express-nemo-error-response](packages/express-nemo-error-response/)
+- [express-nemo-logger](packages/express-nemo-logger/)
+- [express-nemo-performance](packages/express-nemo-performance/)
+- [express-nemo-request-response-logger](packages/express-nemo-request-response-logger/)
 
 ## Sematic versioning
 
@@ -18,7 +18,7 @@ All packages are versioned using [semver](https://semver.org/). In essence, havi
 ## Installation example
 
 ```bash
-npm install --save express-http-context-correlation-id
+npm install --save express-nemo-correlation-id
 ```
 
 ## Usage example
@@ -26,7 +26,7 @@ npm install --save express-http-context-correlation-id
 ```js
 const express = require('express')
 const router = express.Router()
-const middleware = require('express-http-context-correlation-id')
+const middleware = require('express-nemo-correlation-id')
 
 router.use(middleware)
 ```
