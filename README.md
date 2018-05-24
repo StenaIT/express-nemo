@@ -5,6 +5,8 @@ A collection of middlewares for express
 ## Packages
 
 - [express-http-context-correlation-id](packages/express-http-context-correlation-id/)
+- [express-http-context-error-logging](packages/express-http-context-error-logging/)
+- [express-http-context-error-response](packages/express-http-context-error-response/)
 - [express-http-context-logger](packages/express-http-context-logger/)
 - [express-http-context-performance](packages/express-http-context-performance/)
 - [express-http-context-request-response-logging](packages/express-http-context-request-response-logging/)
