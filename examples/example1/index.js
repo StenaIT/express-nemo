@@ -18,7 +18,7 @@ router.get('/', (req, res, next) => {
 const server = express()
 
 server
-  .use(expressHttpContextCorrelationId)
+  .use(expressHttpContextCorrelationId())
   .use(expressHttpContextLogger({ loggerFactory: (req, res) => console }))
   .use('/', router)
   .use(expressHttpContextRequestResponseLogging())
