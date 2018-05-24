@@ -25,10 +25,14 @@ server
   .use(expressHttpContextLogger({ loggerFactory: (req, res) => console }))
   .use('/', router)
   .use(performanceMonitor.end)
-  .use(expressHttpContextRequestResponseLogging({
-    logEventFactory: (req, res) => {
-      return `${req.method} ${req.url} - HTTP ${res.statusCode} (time ${req.context.performance.timing.time} s.ms)`
-    }
-  }))
+  .use(
+    expressHttpContextRequestResponseLogging({
+      logEventFactory: (req, res) => {
+        return `${req.method} ${req.url} - HTTP ${res.statusCode} (time ${
+          req.context.performance.timing.time
+        } s.ms)`
+      }
+    })
+  )
 
 server.listen(PORT, () => console.log(`Server is now running on port ${PORT}`))
