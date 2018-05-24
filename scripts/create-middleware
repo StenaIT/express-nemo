@@ -48,8 +48,17 @@ module.exports = middleware
 
 " > "${package_dir:?}/index.js"
 
-echo "module.exports = (req, res, next) => {
-  next()
+echo "const defaults = {}
+
+module.exports = options => {
+  options = { ...defaults, ...options }
+
+  const middleware = (req, res, next) => {
+    next()
+  }
+
+  middleware.options = options
+  return middleware
 }
 " > "${package_dir:?}/middleware.js"
 
