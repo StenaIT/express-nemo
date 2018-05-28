@@ -1,5 +1,5 @@
 {
-  "name": "express-nemo-request-response-logging",
+  "name": "express-nemo-request-response-logger",
   "version": "0.1.0",
   "description": "A middleware for express, adding request and response logging",
   "main": "index.js",
