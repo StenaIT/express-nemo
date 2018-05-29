@@ -54,6 +54,28 @@ describe('express-nemo-error-logger', () => {
         expect(mw.options.eventTemplate).to.be.equal(testOptions.eventTemplate)
       })
     })
+
+    context('invalid', () => {
+      context('when no createLogger is provided', () => {
+        it('throws an error', () => {
+          expect(() =>
+            middleware({
+              createLogger: null
+            })
+          ).to.throw()
+        })
+      })
+
+      context('when no eventTemplate is provided', () => {
+        it('throws an error', () => {
+          expect(() =>
+            middleware({
+              eventTemplate: null
+            })
+          ).to.throw()
+        })
+      })
+    })
   })
 
   it('should always call next', () => {
