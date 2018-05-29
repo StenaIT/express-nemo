@@ -7,6 +7,7 @@ const expressHttpContextRequestResponseLogger = require('express-nemo-request-re
 const expressHttpContextPerformace = require('express-nemo-performance')
 const expressHttpContextErrorResponse = require('express-nemo-error-response')
 const expressHttpContextErrorLogger = require('express-nemo-error-logger')
+const expressHttpNotFoundRoute = require('express-nemo-route-not-found')
 const performanceMonitor = expressHttpContextPerformace()
 
 const PORT = process.env.PORT || 4000
@@ -29,7 +30,9 @@ server
   .use(performanceMonitor.start)
   .use(expressHttpContextCorrelationId())
   .use(expressHttpContextLogger({ loggerFactory: (req, res) => console }))
+
   .use('/', router)
+  .use(expressHttpNotFoundRoute())
   .use(performanceMonitor.end)
   .use(expressHttpContextErrorLogger())
   .use(expressHttpContextErrorResponse())
