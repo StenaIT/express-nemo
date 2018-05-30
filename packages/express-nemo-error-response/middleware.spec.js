@@ -7,7 +7,6 @@ describe('express-nemo-error-response', () => {
   let sendCalledWithCode = null
   let err = new Error('Test error')
   let req = { url: '/api/path' }
-  let  = []
 
   const MockRes = () => {
     return {
@@ -25,7 +24,7 @@ describe('express-nemo-error-response', () => {
   let res = MockRes()
 
   const testOptions = {
-    errorMessageTemplate: (err, statusCode, req) => 'test'
+    errorMessageTemplate: (err, req, res) => 'test'
   }
 
   const next = () => {
@@ -54,7 +53,9 @@ describe('express-nemo-error-response', () => {
     context('overrides', () => {
       it('override message template with our own', () => {
         let mw = middleware(testOptions)
-        expect(mw.options.errorMessageTemplate).to.be.equal(testOptions.errorMessageTemplate)
+        expect(mw.options.errorMessageTemplate).to.be.equal(
+          testOptions.errorMessageTemplate
+        )
       })
     })
 
