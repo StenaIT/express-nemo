@@ -15,7 +15,7 @@ module.exports = opt => {
 
   const middleware = (err, req, res, next) => {
     res.status(500)
-    let errorResponse = options.errorMessageTemplate(err, req)
+    let errorResponse = options.errorMessageTemplate(err, req, res)
     res.send(errorResponse)
     next()
   }
