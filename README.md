@@ -37,3 +37,29 @@ router.use(middleware)
 ### Configuration
 
 Some middlewares are configurable (see each package for configuration options).
+
+## Middleware scripts
+
+### Create
+
+A script that generate the boiler plate for a new middleware.
+
+```bash
+./scripts/create-middleware express-nemo-[NAME]
+```
+
+### Init
+
+After git clone you can run npm init on all of the middlewares.
+
+```bash
+./scripts/init
+```
+
+### Run test
+
+This runs test on all of the middlewares.
+
+```bash
+./scripts/test
+```
