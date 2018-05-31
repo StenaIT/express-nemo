@@ -10,6 +10,9 @@ A collection of middlewares for express
 - [express-nemo-logger](packages/express-nemo-logger/)
 - [express-nemo-performance](packages/express-nemo-performance/)
 - [express-nemo-request-response-logger](packages/express-nemo-request-response-logger/)
+- [express-nemo-route-health](packages/express-nemo-route-health/)
+- [express-nemo-route-not-found](packages/express-nemo-route-not-found/)
+- [express-nemo-route-ping](packages/express-nemo-route-ping/)
 
 ## Sematic versioning
 
