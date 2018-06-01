@@ -14,7 +14,7 @@ A collection of middlewares for express
 - [express-nemo-route-not-found](packages/express-nemo-route-not-found/)
 - [express-nemo-route-ping](packages/express-nemo-route-ping/)
 
-## Sematic versioning
+## Semantic versioning
 
 All packages are versioned using [semver](https://semver.org/). In essence, having installed version `1.0.0`, version `2.0.0` is to be considered breaking while `1.9.0` is not.
 
@@ -42,7 +42,7 @@ Some middlewares are configurable (see each package for configuration options).
 
 ### Create
 
-A script that generate the boiler plate for a new middleware.
+A script that generate the boilerplate for a new middleware.
 
 ```bash
 ./scripts/create-middleware express-nemo-[NAME]
