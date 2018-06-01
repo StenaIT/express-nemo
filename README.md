@@ -63,3 +63,45 @@ This runs test on all of the middlewares.
 ```bash
 ./scripts/test
 ```
+
+## Publish
+- [Prereq](#prereq)
+- [Update version](#update-version)
+- [Git push](#git-push)
+- [Publish](#publish-the-new-version)
+
+
+### Prereq
+- User must be in the collabrotors for "stena-it" organization
+- cd to the middleware you wish to publish
+
+### Update version
+
+Update x in version x.0.0 (eg. breaking change was made)
+```bash
+npm version major
+```
+
+Update y in version 1.y.0 (eg. a feature was added )
+```bash
+npm version minor
+
+```
+Update z in version 1.0.z (eg. a fix internally was applied that do not effect the interface)
+```bash
+npm version patch
+```
+
+### Git push
+
+```bash
+git add packages.json
+git commit -m "bump version to x.y.z"
+git push
+```
+
+### Publish the new version
+
+```bash
+npm publish
+```
