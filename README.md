@@ -72,7 +72,7 @@ This runs test on all of the middlewares.
 
 
 ### Prereq
-- User must be in the collabrotors for "stena-it" organization
+- User must be in the collaborators for "stena-it" organization
 - cd to the middleware you wish to publish
 
 ### Update version
