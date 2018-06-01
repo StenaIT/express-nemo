@@ -95,7 +95,7 @@ npm version patch
 ### Git push
 
 ```bash
-git add packages.json
+git add package.json
 git commit -m "bump version to x.y.z"
 git push
 ```
