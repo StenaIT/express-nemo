@@ -13,7 +13,20 @@ let runHttpQueryStub = sinon.stub(apolloCore, 'runHttpQuery')
 const middleware = require('./middleware')
 
 const validConfig = {
-  graphqlSchema: { test: 1 }
+  graphqlSchema: {
+    typeDefs: `
+      type Query {
+        hello: String
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: (root, args, context) => {
+          return 'Hello world!'
+        }
+      }
+    }
+  }
 }
 
 describe('express-nemo-route-graphql', () => {
@@ -73,7 +86,7 @@ describe('express-nemo-route-graphql', () => {
       expect(nextStub).to.have.callCount(1)
     })
 
-    it('should call once next on failure', async () => {
+    it('should call next once on failure', async () => {
       runHttpQueryStub.rejects('Error')
 
       await SUT(req, res, nextStub)
