@@ -1,3 +1,4 @@
+const bodyParser = require('body-parser')
 const express = require('express')
 const router = express.Router()
 
@@ -7,8 +8,30 @@ const expressHttpContextRequestResponseLogger = require('express-nemo-request-re
 const expressHttpContextPerformace = require('express-nemo-performance')
 const expressHttpContextErrorResponse = require('express-nemo-error-response')
 const expressHttpContextErrorLogger = require('express-nemo-error-logger')
+const expressHttpPingRoute = require('express-nemo-route-ping')
+const expressHttpHealthRoute = require('express-nemo-route-health')
+const expressHttpGraphqlRoute = require('../../packages/express-nemo-route-graphql')
 const expressHttpNotFoundRoute = require('express-nemo-route-not-found')
 const performanceMonitor = expressHttpContextPerformace()
+
+const typeDefs = `
+  type Query {
+    hello: String
+  }
+`
+
+const resolvers = {
+  Query: {
+    hello: (root, args, context) => {
+      return 'Hello world!'
+    }
+  }
+}
+
+const schema = {
+  typeDefs,
+  resolvers
+}
 
 const PORT = process.env.PORT || 4000
 
@@ -32,6 +55,14 @@ server
   .use(expressHttpContextLogger({ loggerFactory: (req, res) => console }))
 
   .use('/', router)
+  .get('/ping', expressHttpPingRoute())
+  .get('/health', expressHttpHealthRoute({ checks: [] }))
+  .post(
+    '/graphql',
+    bodyParser.json(),
+    expressHttpGraphqlRoute({ graphqlSchema: schema })
+  )
+
   .use(expressHttpNotFoundRoute())
   .use(performanceMonitor.end)
   .use(expressHttpContextErrorLogger())
