@@ -1,14 +1,37 @@
+const bodyParser = require('body-parser')
 const express = require('express')
 const router = express.Router()
 
-const expressHttpContextCorrelationId = require('express-nemo-correlation-id')
-const expressHttpContextLogger = require('express-nemo-logger')
-const expressHttpContextRequestResponseLogger = require('express-nemo-request-response-logger')
-const expressHttpContextPerformace = require('express-nemo-performance')
-const expressHttpContextErrorResponse = require('express-nemo-error-response')
-const expressHttpContextErrorLogger = require('express-nemo-error-logger')
-const expressHttpNotFoundRoute = require('express-nemo-route-not-found')
+const expressHttpContextCorrelationId = require('../../packages/express-nemo-correlation-id')
+const expressHttpContextLogger = require('../../packages/express-nemo-logger')
+const expressHttpContextRequestResponseLogger = require('../../packages/express-nemo-request-response-logger')
+const expressHttpContextPerformace = require('../../packages/express-nemo-performance')
+const expressHttpContextErrorResponse = require('../../packages/express-nemo-error-response')
+const expressHttpContextErrorLogger = require('../../packages/express-nemo-error-logger')
+const expressHttpPingRoute = require('../../packages/express-nemo-route-ping')
+const expressHttpHealthRoute = require('../../packages/express-nemo-route-health')
+const expressHttpGraphqlRoute = require('../../packages/express-nemo-route-graphql')
+const expressHttpNotFoundRoute = require('../../packages/express-nemo-route-not-found')
 const performanceMonitor = expressHttpContextPerformace()
+
+const typeDefs = `
+  type Query {
+    hello: String
+  }
+`
+
+const resolvers = {
+  Query: {
+    hello: (root, args, context) => {
+      return 'Hello world!'
+    }
+  }
+}
+
+const schema = {
+  typeDefs,
+  resolvers
+}
 
 const PORT = process.env.PORT || 4000
 
@@ -32,6 +55,14 @@ server
   .use(expressHttpContextLogger({ loggerFactory: (req, res) => console }))
 
   .use('/', router)
+  .get('/ping', expressHttpPingRoute())
+  .get('/health', expressHttpHealthRoute({ checks: [] }))
+  .post(
+    '/graphql',
+    bodyParser.json(),
+    expressHttpGraphqlRoute({ graphqlSchema: schema })
+  )
+
   .use(expressHttpNotFoundRoute())
   .use(performanceMonitor.end)
   .use(expressHttpContextErrorLogger())
