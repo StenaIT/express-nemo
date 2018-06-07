@@ -1,45 +1,84 @@
-const expect = require('chai').expect
+/* global describe context it beforeEach afterEach */
+
+const chai = require('chai')
+const sinon = require('sinon')
+const sinonChai = require('sinon-chai')
+var expect = chai.expect
+chai.use(sinonChai)
+let sandbox = sinon.createSandbox()
+
+let apolloCore = require('apollo-server-core')
+let runHttpQueryStub = sinon.stub(apolloCore, 'runHttpQuery')
+
 const middleware = require('./middleware')
+
 const validConfig = {
-  graphqlSchema: {'test'}
+  graphqlSchema: { test: 1 }
 }
 
 describe('express-nemo-route-graphql', () => {
-  context('valid configuration', () => {
-    context('minimum configuration', () => {
+  let SUT
+
+  afterEach(() => {
+    sandbox.reset()
+    runHttpQueryStub.reset()
+  })
+
+  context('configuration', () => {
+    SUT = middleware
+
+    context('valid minimum', () => {
       it('returns middleware with options exposed', async () => {
-        let mw = await middleware(validConfig)
-        expect(mw.options).to.not.be.undefined
+        let mw = await SUT(validConfig)
+        expect(mw.options).to.not.be.an('undefined')
+      })
+    })
+
+    context('invalid', () => {
+      it('throws an error when no graphqlSchema', () => {
+        expect(() => SUT()).to.throw()
       })
     })
   })
 
-  context('invalid configuration', () => {
-    it('throws an error when no graphqlSchema', async () => {
-       expect(() => await middleware()).to.throw()
-    })
-  })
-
   context('middleware is called', async () => {
-    let nextCalled = false
-    let SUT
-
-    const next = () => {
-      nextCalled = true
+    let nextStub = sandbox.stub()
+    let req = {
+      url: '/api/graphql',
+      headers: {
+        authorization: 'LONG_ID'
+      },
+      context: {
+        logger: {
+          debug: msg => console.log(msg)
+        }
+      }
     }
 
-    beforeEach(() => {
-      nextCalled = false
+    let res = {
+      setHeader: h => {},
+      write: msg => {},
+      end: () => {}
+    }
+
+    beforeEach(async () => {
       SUT = await middleware(validConfig)
     })
 
-    it('should always call next', () => {
-      let req = { url: '/api/path' }
-      let res = {}
+    it('should call next once on success', async () => {
+      runHttpQueryStub.resolves('')
 
-      SUT(req, res, next)
+      await SUT(req, res, nextStub)
+      expect(runHttpQueryStub).to.have.callCount(1)
+      expect(nextStub).to.have.callCount(1)
+    })
 
-      expect(nextCalled).to.be.true
+    it('should call once next on failure', async () => {
+      runHttpQueryStub.rejects('Error')
+
+      await SUT(req, res, nextStub)
+      expect(runHttpQueryStub).to.have.callCount(1)
+      expect(nextStub).to.have.callCount(1)
     })
   })
 })
