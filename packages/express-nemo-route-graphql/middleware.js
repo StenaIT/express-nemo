@@ -10,9 +10,8 @@ module.exports = options => {
     throw new Error('[Options] Missing graphqlSchema object')
   }
 
-  console.log('before')
   const schema = makeExecutableSchema(options.graphqlSchema)
-  console.log('after')
+
   const middleware = async (req, res, next) => {
     let nextWasCalled = false
     const wrappedNext = arg => {
