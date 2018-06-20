@@ -17,10 +17,12 @@ module.exports = options => {
   }
 
   const middleware = (req, res, next) => {
-    if (!req.route) {
-      res.status(404)
-      const clientResponse = options.notFoundResponseTemplate(req, res)
-      res.send(clientResponse)
+    if (res.statusCode === 200) {
+      if (!req.route) {
+        res.status(404)
+        const clientResponse = options.notFoundResponseTemplate(req, res)
+        res.send(clientResponse)
+      }
     }
 
     next()

@@ -1,3 +1,5 @@
+/* global describe context it beforeEach */
+
 const expect = require('chai').expect
 const middleware = require('./middleware')
 
@@ -41,23 +43,13 @@ describe('express-nemo-route-not-found', () => {
       })
     })
   })
-  context('middleware is called', () => {
+
+  context('middleware is called with 200 status code', () => {
     let nextCalled
-    let callArgs
     let sendCalled
     let SUT
     let req = {}
-    let res = {
-      statusCode: 200,
-      send: data => {
-        sendCalled = true
-        return res
-      },
-      status: code => {
-        res.statusCode = code
-        return res
-      }
-    }
+    let res = {}
 
     const next = () => {
       nextCalled = true
@@ -66,6 +58,17 @@ describe('express-nemo-route-not-found', () => {
     beforeEach(() => {
       nextCalled = false
       sendCalled = false
+      res = {
+        statusCode: 200,
+        send: data => {
+          sendCalled = true
+          return res
+        },
+        status: code => {
+          res.statusCode = code
+          return res
+        }
+      }
       SUT = middleware({
         notFoundResponseTemplate: () => {
           return {}
@@ -75,7 +78,7 @@ describe('express-nemo-route-not-found', () => {
 
     it('calls next', () => {
       SUT(req, res, next)
-      expect(nextCalled).to.be.true
+      expect(nextCalled).to.equal(true)
     })
 
     it('passes 404 as status code', () => {
@@ -83,20 +86,67 @@ describe('express-nemo-route-not-found', () => {
       expect(res.statusCode).to.equal(404)
     })
 
-    it('passes clientResponse to client', () => {
+    it('sends response to client', () => {
       SUT(req, res, next)
       expect(sendCalled).to.equal(true)
     })
 
-    it('calls the notFoundResponseTemplate with request and response', () => {
+    it('calls the template function with request and response', () => {
       let calledCorrectly
-
-      mw = middleware({
+      const mw = middleware({
         notFoundResponseTemplate: (request, response) =>
           (calledCorrectly = request === req && response === res)
       })
       mw(req, res, next)
-      expect(calledCorrectly).to.be.true
+      expect(calledCorrectly).to.equal(true)
+    })
+  })
+
+  context('middleware is called with non 200 status code', () => {
+    let nextCalled
+    let sendCalled
+    let SUT
+    let req = {}
+    let res = {}
+
+    const next = () => {
+      nextCalled = true
+    }
+
+    beforeEach(() => {
+      nextCalled = false
+      sendCalled = false
+      res = {
+        statusCode: 401,
+        send: data => {
+          sendCalled = true
+          return res
+        },
+        status: code => {
+          res.statusCode = code
+          return res
+        }
+      }
+      SUT = middleware({
+        notFoundResponseTemplate: () => {
+          return {}
+        }
+      })
+    })
+
+    it('calls next', () => {
+      SUT(req, res, next)
+      expect(nextCalled).to.equal(true)
+    })
+
+    it('preserves the status code', () => {
+      SUT(req, res, next)
+      expect(res.statusCode).to.equal(401)
+    })
+
+    it('does not try to send any response', () => {
+      SUT(req, res, next)
+      expect(sendCalled).to.equal(false)
     })
   })
 })
