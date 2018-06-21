@@ -4,7 +4,7 @@ A collection of middlewares for express
 
 ## Packages
 
-- [express-nemo-auth0-jwt-verify](packages/express-nemo-auth0-jqt-verify/)
+- [express-nemo-auth0-jwt-verify](packages/express-nemo-auth0-jwt-verify/)
 - [express-nemo-correlation-id](packages/express-nemo-correlation-id/)
 - [express-nemo-error-logger](packages/express-nemo-error-logger/)
 - [express-nemo-error-response](packages/express-nemo-error-response/)
