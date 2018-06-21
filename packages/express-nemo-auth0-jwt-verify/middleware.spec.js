@@ -50,7 +50,9 @@ describe('express-nemo-auth0-jwt-verify', () => {
         }
       }
       res = {
+        statusCode: 200,
         status: code => {
+          res.statusCode = code
           return res
         }
       }
@@ -95,6 +97,11 @@ describe('express-nemo-auth0-jwt-verify', () => {
         SUT(req, res, next)
         expect(nextError.name).to.equal('UnauthorizedError')
       })
+
+      it('sets the HTTP status code to 401', () => {
+        SUT(req, res, next)
+        expect(res.statusCode).to.equal(401)
+      })
     })
 
     context('successful authentication', () => {
@@ -114,6 +121,11 @@ describe('express-nemo-auth0-jwt-verify', () => {
       it('calls next without error', () => {
         SUT(req, res, next)
         expect(nextError === undefined).to.equal(true)
+      })
+
+      it('preserves the HTTP status code', () => {
+        SUT(req, res, next)
+        expect(res.statusCode).to.equal(200)
       })
     })
   })
