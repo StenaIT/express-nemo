@@ -15,7 +15,7 @@ module.exports = options => {
         res.status(401)
         middleware.log(
           req,
-          'debug',
+          'info',
           `Authentication failed! Reason: ${err.name}.`
         )
       } else {
