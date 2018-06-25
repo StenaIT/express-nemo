@@ -10,27 +10,23 @@ module.exports = options => {
   }
 
   const middleware = (req, res, next) => {
-    let authError = null
-
     const wrappedNext = err => {
-      authError = err
+      if (err) {
+        res.status(401)
+        middleware.log(
+          req,
+          'debug',
+          `Authentication failed! Reason: ${err.name}.`
+        )
+      } else {
+        middleware.log(req, 'debug', 'Successfully authenticated!')
+      }
+
+      next(err)
     }
 
     middleware.log(req, 'debug', 'Starting authentication process')
     middleware.auth(req, res, wrappedNext)
-
-    if (authError) {
-      res.status(401)
-      middleware.log(
-        req,
-        'debug',
-        `Authentication failed! Reason: ${authError.name}.`
-      )
-    } else {
-      middleware.log(req, 'debug', 'Successfully authenticated!')
-    }
-
-    next(authError)
   }
 
   middleware.log = (req, level, message) => {
