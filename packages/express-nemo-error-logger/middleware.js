@@ -43,7 +43,9 @@ module.exports = opt => {
 
   const middleware = (err, req, res, next) => {
     const logger = getLogger(req) || options.createLogger(err, req)
-    logger.error(options.eventTemplate(err, req))
+    if (err.name !== 'UnauthorizedError') {
+      logger.error(options.eventTemplate(err, req))
+    }
     next(err)
   }
 
