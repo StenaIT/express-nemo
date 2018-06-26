@@ -1,7 +1,17 @@
-/* global describe context it beforeEach */
+/* global describe context it beforeEach  */
 
 const expect = require('chai').expect
 const middleware = require('./middleware')
+
+function UnauthorizedError (code, error) {
+  this.name = 'UnauthorizedError'
+  this.message = error.message
+  Error.call(this, error.message)
+  Error.captureStackTrace(this, this.constructor)
+  this.code = code
+  this.status = 401
+  this.inner = error
+}
 
 describe('express-nemo-auth0-jwt-verify', () => {
   context('invalid configuration', () => {
@@ -29,15 +39,10 @@ describe('express-nemo-auth0-jwt-verify', () => {
   context('middleware is called', () => {
     let req
     let res
-    let nextCalled
     let nextError
     let logMessages = []
+    let infoMessages = []
     let SUT
-
-    const next = err => {
-      nextCalled = true
-      nextError = err
-    }
 
     beforeEach(() => {
       req = {
@@ -45,6 +50,9 @@ describe('express-nemo-auth0-jwt-verify', () => {
           logger: {
             debug: msg => {
               logMessages.push(msg)
+            },
+            info: msg => {
+              infoMessages.push(msg)
             }
           }
         }
@@ -56,76 +64,126 @@ describe('express-nemo-auth0-jwt-verify', () => {
           return res
         }
       }
-      nextCalled = false
       logMessages = []
+      infoMessages = []
+
       SUT = middleware({
         jwt: {
           secret: 'a secret'
         }
       })
+
+      // Simulate an async operation with callback
+      // see https://github.com/auth0/express-jwt/blob/master/lib/index.js#L90
+      SUT.auth = (req, res, next) => {
+        setTimeout(() => {
+          next()
+        }, 1)
+      }
     })
 
-    it('calls next', () => {
+    it('calls next', done => {
+      const next = () => done()
+
       SUT(req, res, next)
-      expect(nextCalled).to.equal(true)
     })
 
-    it('logs messages', () => {
+    it('logs messages', done => {
+      const next = () => {
+        expect(logMessages.length).to.be.above(1)
+        done()
+      }
       SUT(req, res, next)
-      expect(logMessages.length).to.be.above(1)
     })
 
     context('without logger', () => {
-      it('does not log any messages', () => {
+      it('does not log any messages', done => {
         req = {}
+        const next = () => {
+          expect(logMessages.length).to.be.equal(0)
+          done()
+        }
+
         SUT(req, res, next)
-        expect(logMessages.length).to.be.equal(0)
       })
     })
 
     context('failed authentication', () => {
-      it('logs failed authenticaitons', () => {
-        SUT(req, res, next)
-        expect(
-          logMessages.includes(
-            '[auth0-jwt] Authentication failed! Reason: UnauthorizedError.'
-          )
-        ).to.equal(true)
+      beforeEach(() => {
+        SUT.auth = (req, res, next) => {
+          setTimeout(() => {
+            next(new UnauthorizedError('errorCode', new Error('MyError')))
+          }, 5)
+        }
       })
 
-      it('calls next with error', () => {
+      it('logs failed authenticaitons with info', done => {
+        const next = () => {
+          expect(
+            infoMessages.includes(
+              '[auth0-jwt] Authentication failed! Reason: UnauthorizedError.'
+            )
+          ).to.equal(true)
+          done()
+        }
+
         SUT(req, res, next)
-        expect(nextError.name).to.equal('UnauthorizedError')
       })
 
-      it('sets the HTTP status code to 401', () => {
+      it('calls next with error', done => {
+        const next = nextError => {
+          expect(nextError.name).to.equal('UnauthorizedError')
+          done()
+        }
+
         SUT(req, res, next)
-        expect(res.statusCode).to.equal(401)
+      })
+
+      it('sets the HTTP status code to 401', done => {
+        const next = () => {
+          expect(res.statusCode).to.equal(401)
+          done()
+        }
+
+        SUT(req, res, next)
       })
     })
 
     context('successful authentication', () => {
       beforeEach(() => {
         SUT.auth = (req, res, next) => {
-          next()
+          setTimeout(() => {
+            next()
+          }, 1)
         }
       })
 
-      it('logs successful authenticaitons', () => {
+      it('logs successful authenticaitons', done => {
+        const next = () => {
+          expect(
+            logMessages.includes('[auth0-jwt] Successfully authenticated!')
+          ).to.equal(true)
+          done()
+        }
+
         SUT(req, res, next)
-        expect(
-          logMessages.includes('[auth0-jwt] Successfully authenticated!')
-        ).to.equal(true)
       })
 
-      it('calls next without error', () => {
+      it('calls next without error', done => {
+        const next = () => {
+          expect(nextError === undefined).to.equal(true)
+          done()
+        }
+
         SUT(req, res, next)
-        expect(nextError === undefined).to.equal(true)
       })
 
-      it('preserves the HTTP status code', () => {
+      it('preserves the HTTP status code', done => {
+        const next = () => {
+          expect(res.statusCode).to.equal(200)
+          done()
+        }
         SUT(req, res, next)
-        expect(res.statusCode).to.equal(200)
       })
     })
   })
