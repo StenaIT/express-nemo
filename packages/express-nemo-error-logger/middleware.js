@@ -47,9 +47,8 @@ module.exports = opt => {
 
   const middleware = (err, req, res, next) => {
     const logger = getLogger(req) || options.createLogger(err, req)
-    const loggIt =
-      options.excludeErrors.filter(exclude => exclude === err.name).length === 0
-    if (loggIt) {
+    const ignoreError = options.excludeErrors.includes(err.name)
+    if (!ignoreError) {
       logger.error(options.eventTemplate(err, req))
     }
     next(err)
