@@ -1,3 +1,5 @@
+/* global describe context it beforeEach */
+
 const expect = require('chai').expect
 const middleware = require('./middleware')
 
@@ -23,7 +25,8 @@ describe('express-nemo-error-logger', () => {
         error: message => logs.push(message)
       }
     },
-    eventTemplate: (err, req) => 'test'
+    eventTemplate: (err, req) => 'test',
+    excludeErrors: ['UnauthorizedError']
   }
 
   context('should be a configurable middleware', () => {
@@ -75,6 +78,18 @@ describe('express-nemo-error-logger', () => {
           ).to.throw()
         })
       })
+
+      context('when no excludeErrors is provided', () => {
+        it('throws an error', () => {
+          expect(() =>
+            middleware({
+              excludeErrors: null
+            })
+          ).to.throw(
+            "[Options] Null on 'excludeErrors' property is not allowed"
+          )
+        })
+      })
     })
   })
 
@@ -91,5 +106,13 @@ describe('express-nemo-error-logger', () => {
 
     expect(logs.length).to.be.equal(1)
     expect(logs[0]).to.be.equal('test')
+  })
+
+  it('should not log an error event', () => {
+    let mw = middleware(testOptions)
+
+    mw({ name: 'UnauthorizedError' }, req, res, next)
+
+    expect(logs.length).to.be.equal(0)
   })
 })
