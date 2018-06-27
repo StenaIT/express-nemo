@@ -1,6 +1,7 @@
 const defaults = {
   createLogger: () => console,
-  eventTemplate: (err, req) => `Unandled error: ${err.name}, ${err.message}`
+  eventTemplate: (err, req) => `Unandled error: ${err.name}, ${err.message}`,
+  excludeErrors: []
 }
 
 module.exports = opt => {
@@ -17,7 +18,9 @@ module.exports = opt => {
 
     requiredNotNullOptions.forEach(option => {
       if (!options.hasOwnProperty(option)) {
-        throw new Error(`[Options] Missing ${option} property`)
+        throw new Error(`[Options] Missing '${option}' property`)
+      } else if (options[option] === null) {
+        throw new Error(`[Options] Null on '${option}' property is not allowed`)
       }
     })
 
@@ -32,7 +35,8 @@ module.exports = opt => {
   }
 
   const requiredFunctions = ['createLogger', 'eventTemplate']
-  optionsGuards(requiredFunctions, requiredFunctions)
+  const requiredOptions = requiredFunctions.concat(['excludeErrors'])
+  optionsGuards(requiredOptions, requiredFunctions)
 
   const getLogger = req => {
     if (req.context && req.context.logger) {
@@ -43,7 +47,9 @@ module.exports = opt => {
 
   const middleware = (err, req, res, next) => {
     const logger = getLogger(req) || options.createLogger(err, req)
-    if (err.name !== 'UnauthorizedError') {
+    const loggIt =
+      options.excludeErrors.filter(exclude => exclude === err.name).length === 0
+    if (loggIt) {
       logger.error(options.eventTemplate(err, req))
     }
     next(err)
