@@ -1,6 +1,6 @@
 {
   "name": "express-nemo-route-graphql",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A middleware for express to add a route that handles ping route in an api",
   "main": "index.js",
   "scripts": {
