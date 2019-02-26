@@ -1,6 +1,6 @@
 {
   "name": "express-nemo-route-health",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A middleware for express to add a route that handles health route in an api.",
   "main": "index.js",
   "scripts": {
