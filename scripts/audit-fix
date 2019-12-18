@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+for package in $(ls ./packages/); do
+  echo "${package:?}"
+  declare package_dir="./packages/${package:?}"
+  if [[ -d ${package_dir:?} ]]; then
+    cd "${package_dir:?}"
+    npm audit fix
+    cd -
+  fi
+done
