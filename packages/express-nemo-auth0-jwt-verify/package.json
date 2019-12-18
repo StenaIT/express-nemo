@@ -1,6 +1,6 @@
 {
   "name": "express-nemo-auth0-jwt-verify",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "A middleware for express to add auth0 jwt verification in an api.",
   "main": "index.js",
   "scripts": {

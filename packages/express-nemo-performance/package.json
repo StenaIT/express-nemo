@@ -1,6 +1,6 @@
 {
   "name": "express-nemo-performance",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "A middleware for express, extending requests with performance metrics",
   "main": "index.js",
   "scripts": {

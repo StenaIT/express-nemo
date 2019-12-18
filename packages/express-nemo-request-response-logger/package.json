@@ -1,6 +1,6 @@
 {
   "name": "express-nemo-request-response-logger",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "A middleware for express, adding request and response logging",
   "main": "index.js",
   "scripts": {
