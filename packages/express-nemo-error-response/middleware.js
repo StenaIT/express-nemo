@@ -14,11 +14,16 @@ module.exports = opt => {
   }
 
   const middleware = (err, req, res, next) => {
-    if (res.statusCode <= 399) {
-      res.status(500)
-    }
     let errorResponse = options.errorMessageTemplate(err, req, res)
-    res.send(errorResponse)
+    if(!res.headersSent) {
+      if (res.statusCode <= 399) {
+        res.status(500)
+      }
+      res.send(errorResponse)
+    } else if(req.context && req.context.logger) {
+        req.context.logger.error('Message already sent, see next log for more info')
+        req.context.logger.error(errorResponse)
+    }
     next()
   }
 
