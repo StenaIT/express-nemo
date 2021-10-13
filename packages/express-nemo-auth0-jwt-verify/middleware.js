@@ -9,6 +9,14 @@ module.exports = options => {
     throw new Error('[Options] Missing jwt configuration object')
   }
 
+  if (!options.jwt.secret) {
+    throw new Error('[Options] Missing secret in jwt')
+  }
+
+  if (!options.jwt.algorithms || !Array.isArray(options.jwt.algorithms ) ) {
+    throw new Error('[Options] Missing algorithms in jwt')
+  }
+
   const middleware = (req, res, next) => {
     const wrappedNext = err => {
       if (err) {
