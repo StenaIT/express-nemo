@@ -4,6 +4,8 @@ A middleware for express to add auth0 jwt verification in an api.
 
 ## Options
 
-| Name | Required | Default value | Description                                              |
-| ---- | -------- | ------------- | -------------------------------------------------------- |
-| jwt  | yes      |               | Options for the `express-jwt` authentication middleware. |
+| Name           | Required | Default value | Description                                              |
+| -------------- | -------- | ------------- | -------------------------------------------------------- |
+| jwt            | yes      |               | Options for the `express-jwt` authentication middleware. |
+| jwt.secret     | yes      |               | Options for the `express-jwt` authentication middleware. |
+| jwt.algorithms | yes      |               | Options for the `express-jwt` authentication middleware. |
