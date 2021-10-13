@@ -23,7 +23,11 @@ module.exports = options => {
 
   const middleware = (req, res, next) => {
     const logEvent = options.logEventFactory(req, res)
-    req.context.logger[options.loggerFunctionName](logEvent)
+    if(res.statusCode >= 424) {
+      req.context.logger['error'](logEvent)
+    } else {
+      req.context.logger[options.loggerFunctionName](logEvent)
+    }
     next()
   }
 
