@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid');
 const perfy = require('perfy')
 
 const defaults = {}
@@ -11,6 +11,7 @@ const handleEnd = (req, res, next) => {
 
   if (trackingId) {
     req.context.performance.timing = perfy.end(trackingId)
+    req.context.performance.trackingId = null
   }
 }
 
@@ -28,18 +29,16 @@ module.exports = options => {
 
       perfy.start(req.context.performance.trackingId)
 
-      next()
+      next && next()
     },
-    end: [
-      (err, req, res, next) => {
-        handleEnd(req, res, next)
-        next(err)
-      },
-      (req, res, next) => {
-        handleEnd(req, res, next)
-        next()
-      }
-    ]
+    end: (req, res, next) => {
+      handleEnd(req, res, next)
+      next && next()
+    },
+    error: (err, req, res, next) => {
+      handleEnd(req, res, next)
+      next && next(err)
+    }
   }
 
   middleware.options = options
