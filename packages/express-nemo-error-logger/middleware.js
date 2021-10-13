@@ -1,6 +1,15 @@
 const defaults = {
   createLogger: () => console,
-  eventTemplate: (err, req) => `Unandled error: ${err.name}, ${err.message}`,
+  eventTemplate: (err, req) => {
+    const time =
+      req.context &&
+      req.context.performance &&
+      req.context.performance.timing
+        ? ` (time ${req.context.performance.timing.time} s.ms)`
+        : ''
+
+    return `Unandled error: ${err.name}, ${err.message}${time}`
+  },
   excludeErrors: []
 }
 
