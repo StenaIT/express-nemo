@@ -1,6 +1,4 @@
-const querystring = require('querystring')
-const url = require('url')
-const { v4: uuid } = require('uuid');
+const { v4: uuid } = require('uuid')
 
 const defaults = {}
 
@@ -8,8 +6,9 @@ module.exports = options => {
   options = { ...defaults, ...options }
 
   const middleware = (req, res, next) => {
-    const query = querystring.parse(url.parse(req.url).query)
-    const correlationId = query.correlationId || uuid()
+    const url2 = new URL(req.url, 'relative:///')
+    const params = new URLSearchParams(url2.search)
+    const correlationId = (params.has('correlationId') && params.get('correlationId')) || uuid()
     req.context = { ...req.context, correlationId: correlationId }
     next()
   }
