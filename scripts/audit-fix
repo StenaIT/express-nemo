@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
+source ./scripts/common.sh
 
-for package in $(ls ./packages/); do
-  echo "${package:?}"
-  declare package_dir="./packages/${package:?}"
-  if [[ -d ${package_dir:?} ]]; then
-    cd "${package_dir:?}"
-    npm audit fix
-    cd -
-  fi
-done
+npm_cmd_on_all_packages audit fix
