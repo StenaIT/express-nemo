@@ -1,7 +1,14 @@
 {
+  "plugins": [
+    "chai-friendly"
+  ],
+  "env": {
+    "mocha": true,
+    "node": true
+  },
   "rules": {
     "jsx-quotes": ["error", "prefer-single"],
     "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
   },
-  "extends": ["standard"]
+  "extends": ["standard", "plugin:chai-friendly/recommended"]
 }

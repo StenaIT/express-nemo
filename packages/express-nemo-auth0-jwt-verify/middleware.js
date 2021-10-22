@@ -43,7 +43,7 @@ module.exports = options => {
     }
   }
 
-  middleware.auth = jwt(options.jwt).unless(req => {
+  middleware.auth = jwt(options.jwt).unless(_req => {
     return process.env.AUTHENTICATION_ACTIVE === 'false'
   })
 

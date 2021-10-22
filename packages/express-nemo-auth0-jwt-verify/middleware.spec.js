@@ -93,6 +93,10 @@ describe('express-nemo-auth0-jwt-verify', function () {
     it('logs messages', function (done) {
       const next = () => {
         expect(logMessages.length).to.be.above(1)
+        expect(logMessages).to.be.deep.equal([
+          '[auth0-jwt] Starting authentication process',
+          '[auth0-jwt] Successfully authenticated!']
+        )
         done()
       }
       SUT(req, res, next)
