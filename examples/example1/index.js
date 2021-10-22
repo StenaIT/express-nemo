@@ -10,7 +10,6 @@ const expressHttpContextErrorResponse = require('../../packages/express-nemo-err
 const expressHttpContextErrorLogger = require('../../packages/express-nemo-error-logger')
 const expressHttpPingRoute = require('../../packages/express-nemo-route-ping')
 const expressHttpHealthRoute = require('../../packages/express-nemo-route-health')
-const expressHttpGraphqlRoute = require('../../packages/express-nemo-route-graphql')
 const expressHttpNotFoundRoute = require('../../packages/express-nemo-route-not-found')
 const performanceMonitor = expressHttpContextPerformace()
 
@@ -92,11 +91,6 @@ server
   .use('/', router)
   .get('/ping', expressHttpPingRoute())
   .get('/health', expressHttpHealthRoute({ checks: [] }))
-  .post(
-    '/graphql',
-    bodyParser.json(),
-    expressHttpGraphqlRoute({ graphqlSchema: schema })
-  )
 
   .use(performanceMonitor.error)
   .use(expressHttpNotFoundRoute())
