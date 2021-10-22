@@ -1,5 +1,5 @@
 const defaults = {
-  responseTemplate: (results, req, res) => {
+  responseTemplate: (results, _req, _res) => {
     return `Status: ${
       results.every(result => result.status === 'OK') ? 'OK' : 'Failure'
     }`
@@ -21,9 +21,9 @@ module.exports = options => {
   }
 
   const middleware = async (req, res, next) => {
-    let results = []
+    const results = []
 
-    for (let healtCheck of options.checks) {
+    for (const healtCheck of options.checks) {
       results.push({
         name: healtCheck.name,
         status: await healtCheck.check()

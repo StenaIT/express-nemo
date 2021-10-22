@@ -2,8 +2,9 @@ const expect = require('chai').expect
 const middleware = require('./middleware')
 
 describe('express-nemo-route-health', () => {
-  let req = { url: '/api/path' }
-  let res = { status: () => res, send: () => {} }
+  const req = { url: '/api/path' }
+  const res = { status: () => res, send: () => {} }
+  let nextCalled = false
 
   const next = () => {
     nextCalled = true
@@ -15,25 +16,25 @@ describe('express-nemo-route-health', () => {
 
   context('should be a configurable middleware', () => {
     it('should store middleware options for us to inspect', () => {
-      let mw = middleware({ checks: [] })
+      const mw = middleware({ checks: [] })
       expect(mw.options).to.not.be.undefined
     })
 
     context('defaults', () => {
       it('default responseTemplate if not specified', () => {
-        let mw = middleware({ checks: [] })
+        const mw = middleware({ checks: [] })
         expect(mw.options.responseTemplate).to.be.a('function')
       })
     })
 
     context('overrides', () => {
-      let testOptions = {
-        responseTemplate: (results, req, res) => 'a response',
+      const testOptions = {
+        responseTemplate: (_results, _req, _res) => 'a response',
         checks: []
       }
 
       it('override responseTemplate with our own', () => {
-        let mw = middleware(testOptions)
+        const mw = middleware(testOptions)
         expect(mw.options.responseTemplate).to.be.equal(
           testOptions.responseTemplate
         )
@@ -61,10 +62,10 @@ describe('express-nemo-route-health', () => {
   })
 
   it('should always call next', () => {
-    let testOptions = {
+    const testOptions = {
       checks: []
     }
-    let mw = middleware(testOptions)
+    const mw = middleware(testOptions)
     mw(req, res, next)
 
     expect(nextCalled).to.be.true
