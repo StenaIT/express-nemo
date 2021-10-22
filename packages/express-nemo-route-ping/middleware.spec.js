@@ -18,7 +18,7 @@ describe('express-nemo-route-ping', () => {
     context('valid', () => {
       context('minimum configuration', () => {
         it('returns middleware with options exposed', () => {
-          let mw = middleware()
+          const mw = middleware()
           expect(mw.options).to.not.be.undefined
         })
       })
@@ -27,13 +27,12 @@ describe('express-nemo-route-ping', () => {
 
   context('middleware is called', () => {
     let nextCalled
-    let callArgs
     let sendCalled
     let SUT
-    let req = {}
-    let res = {
+    const req = {}
+    const res = {
       statusCode: 200,
-      send: data => {
+      send: _data => {
         sendCalled = true
         return res
       },
@@ -71,7 +70,7 @@ describe('express-nemo-route-ping', () => {
     it('calls the respondToClient with response and responseData', () => {
       let calledCorrectly
 
-      mw = middleware({
+      const mw = middleware({
         responseTemplate: (request, response) =>
           (calledCorrectly = request === req && response === res)
       })

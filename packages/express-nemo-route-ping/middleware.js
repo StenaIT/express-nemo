@@ -1,7 +1,7 @@
 const moment = require('moment')
 
 const defaults = {
-  responseTemplate: (req, res) => `I'm alive: ${moment().format()}`
+  responseTemplate: (_req, _res) => `I'm alive: ${moment().format()}`
 }
 
 module.exports = options => {
