@@ -1,5 +1,3 @@
-/* global describe context it beforeEach */
-
 const expect = require('chai').expect
 const middleware = require('./middleware')
 
@@ -20,7 +18,7 @@ describe('express-nemo-route-not-found', () => {
     context('valid', () => {
       context('minimum configuration', () => {
         it('returns middleware with options exposed', () => {
-          let mw = middleware()
+          const mw = middleware()
           expect(mw.options).to.not.be.undefined
         })
       })
@@ -35,7 +33,7 @@ describe('express-nemo-route-not-found', () => {
           const res = {
             statusCode: 404
           }
-          let clientResponse = responseTemplate(req, res)
+          const clientResponse = responseTemplate(req, res)
           expect(clientResponse).to.equal(
             "Not Found '404' - No route matching path '/' was found"
           )
@@ -48,7 +46,7 @@ describe('express-nemo-route-not-found', () => {
     let nextCalled
     let sendCalled
     let SUT
-    let req = {}
+    const req = {}
     let res = {}
 
     const next = () => {
@@ -60,7 +58,7 @@ describe('express-nemo-route-not-found', () => {
       sendCalled = false
       res = {
         statusCode: 200,
-        send: data => {
+        send: _data => {
           sendCalled = true
           return res
         },
@@ -106,7 +104,7 @@ describe('express-nemo-route-not-found', () => {
     let nextCalled
     let sendCalled
     let SUT
-    let req = {}
+    const req = {}
     let res = {}
 
     const next = () => {
@@ -118,7 +116,7 @@ describe('express-nemo-route-not-found', () => {
       sendCalled = false
       res = {
         statusCode: 401,
-        send: data => {
+        send: _data => {
           sendCalled = true
           return res
         },
