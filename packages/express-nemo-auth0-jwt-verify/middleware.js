@@ -13,7 +13,7 @@ module.exports = options => {
     throw new Error('[Options] Missing secret in jwt')
   }
 
-  if (!options.jwt.algorithms || !Array.isArray(options.jwt.algorithms ) ) {
+  if (!options.jwt.algorithms || !Array.isArray(options.jwt.algorithms)) {
     throw new Error('[Options] Missing algorithms in jwt')
   }
 

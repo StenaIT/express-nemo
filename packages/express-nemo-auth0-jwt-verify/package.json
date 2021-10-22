@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha './{,!(node_modules)/**/}*.spec.js' --slow 10 -r chai/register-expect",
-    "test:watch": "mocha  './{,!(node_modules)/**/}*.spec.js' --reporter spec --watch --slow 10 -r chai/register-expect"
+    "test:watch": "mocha  './{,!(node_modules)/**/}*.spec.js' --reporter spec --watch --slow 10 -r chai/register-expect",
+    "lint": "eslint --ext .js .",
+    "lint-fix": "eslint --fix --ext .js ."
   },
   "repository": {
     "type": "git",
