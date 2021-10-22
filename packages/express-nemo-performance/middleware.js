@@ -1,9 +1,9 @@
-const { v4: uuid } = require('uuid');
+const { v4: uuid } = require('uuid')
 const perfy = require('perfy')
 
 const defaults = {}
 
-const handleEnd = (req, res, next) => {
+const handleEnd = (req) => {
   const trackingId =
     req.context && req.context.performance
       ? req.context.performance.trackingId
@@ -19,7 +19,7 @@ module.exports = options => {
   options = { ...defaults, ...options }
 
   const middleware = {
-    start: (req, res, next) => {
+    start: (req, _res, next) => {
       req.context = {
         ...req.context,
         performance: {
@@ -29,15 +29,21 @@ module.exports = options => {
 
       perfy.start(req.context.performance.trackingId)
 
-      next && next()
+      if (next) {
+        next()
+      }
     },
-    end: (req, res, next) => {
-      handleEnd(req, res, next)
-      next && next()
+    end: (req, _res, next) => {
+      handleEnd(req)
+      if (next) {
+        next()
+      }
     },
-    error: (err, req, res, next) => {
-      handleEnd(req, res, next)
-      next && next(err)
+    error: (err, req, _res, next) => {
+      handleEnd(req)
+      if (next) {
+        next(err)
+      }
     }
   }
 
