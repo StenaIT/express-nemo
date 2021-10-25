@@ -24,7 +24,7 @@ module.exports = opt => {
       req.context.logger.error('Message already sent, see next log for more info')
       req.context.logger.error(errorResponse)
     }
-    next(err)
+    next()
   }
 
   middleware.options = options
