@@ -6,12 +6,12 @@ const middleware = require('./middleware')
 describe('express-nemo-error-response', () => {
   let nextCalled = false
   let messages = []
-  let err = new Error('Test error')
-  let req = { url: '/api/path' }
+  const err = new Error('Test error')
+  const req = { url: '/api/path' }
   let res = {}
 
   const testOptions = {
-    errorMessageTemplate: (err, req, res) => 'test'
+    errorMessageTemplate: (_err, _req, _res) => 'test'
   }
 
   const next = () => {
@@ -34,19 +34,19 @@ describe('express-nemo-error-response', () => {
 
   context('should be a configurable middleware', () => {
     it('should store middleware options for us to inspect', () => {
-      let mw = middleware()
+      const mw = middleware()
       expect(mw.options).to.not.be.undefined
     })
     context('defaults', () => {
       it('default message template if no one is specified', () => {
-        let mw = middleware({})
+        const mw = middleware({})
         expect(mw.options.errorMessageTemplate).to.be.a('function')
       })
     })
 
     context('overrides', () => {
       it('override message template with our own', () => {
-        let mw = middleware(testOptions)
+        const mw = middleware(testOptions)
         expect(mw.options.errorMessageTemplate).to.be.equal(
           testOptions.errorMessageTemplate
         )
@@ -76,14 +76,14 @@ describe('express-nemo-error-response', () => {
       })
 
       it('should always call next', () => {
-        let mw = middleware()
+        const mw = middleware()
         mw(err, req, res, next)
 
         expect(nextCalled).to.equal(true)
       })
 
       it('should send a response', () => {
-        let mw = middleware(testOptions)
+        const mw = middleware(testOptions)
         mw(err, req, res, next)
 
         expect(messages.length).to.be.equal(1)
@@ -91,7 +91,7 @@ describe('express-nemo-error-response', () => {
       })
 
       it('should set status code to 500', () => {
-        let mw = middleware()
+        const mw = middleware()
         mw(err, req, res, next)
 
         expect(res.statusCode).to.be.equal(500)
@@ -112,14 +112,14 @@ describe('express-nemo-error-response', () => {
       })
 
       it('should always call next', () => {
-        let mw = middleware()
+        const mw = middleware()
         mw(err, req, res, next)
 
         expect(nextCalled).to.equal(true)
       })
 
       it('should send a response', () => {
-        let mw = middleware(testOptions)
+        const mw = middleware(testOptions)
         mw(err, req, res, next)
 
         expect(messages.length).to.be.equal(1)
@@ -127,7 +127,7 @@ describe('express-nemo-error-response', () => {
       })
 
       it('preserve status code', () => {
-        let mw = middleware()
+        const mw = middleware()
         mw(err, req, res, next)
 
         expect(res.statusCode).to.be.equal(expectedStatusCode)

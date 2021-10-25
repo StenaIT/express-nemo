@@ -1,3 +1,5 @@
+/* global describe context it beforeEach */
+
 const expect = require('chai').expect
 const middleware = require('./middleware')
 
@@ -13,7 +15,7 @@ describe('express-nemo-logger', () => {
   context('valid configuration', () => {
     context('minimum configuration', () => {
       it('returns middleware with options exposed', () => {
-        let mw = middleware({
+        const mw = middleware({
           loggerFactory: () => console
         })
         expect(mw.options).to.not.be.undefined
@@ -37,25 +39,25 @@ describe('express-nemo-logger', () => {
     })
 
     it('calls next', () => {
-      let req = {}
-      let res = {}
+      const req = {}
+      const res = {}
       SUT(req, res, next)
       expect(nextCalled).to.be.true
     })
 
     it('attaches a logger instance to the context object', () => {
-      let req = {}
-      let res = {}
+      const req = {}
+      const res = {}
       SUT(req, res, next)
       expect(req.context.logger).to.equal(console)
     })
 
     it('calls the logger factory with request and response', () => {
-      let req = {}
-      let res = {}
+      const req = {}
+      const res = {}
       let calledCorrectly
 
-      mw = middleware({
+      const mw = middleware({
         loggerFactory: (request, response) =>
           (calledCorrectly = request === req && response === res)
       })

@@ -5,7 +5,7 @@ describe('express-nemo-correlation-id', () => {
   context('valid configuration', () => {
     context('minimum configuration', () => {
       it('returns middleware with options exposed', () => {
-        let mw = middleware()
+        const mw = middleware()
         expect(mw.options).to.not.be.undefined
       })
     })
@@ -25,8 +25,8 @@ describe('express-nemo-correlation-id', () => {
     })
 
     it('should always call next', () => {
-      let req = { url: '/api/path' }
-      let res = {}
+      const req = { url: '/api/path' }
+      const res = {}
 
       SUT(req, res, next)
 
@@ -35,8 +35,8 @@ describe('express-nemo-correlation-id', () => {
 
     context('when request does not contain a context property', () => {
       it('should not fail', () => {
-        let req = { url: '/api/path' }
-        let res = {}
+        const req = { url: '/api/path' }
+        const res = {}
 
         SUT(req, res, next)
 
@@ -47,8 +47,8 @@ describe('express-nemo-correlation-id', () => {
 
     context("when client don't supply a correlation id in request", () => {
       it('should generate a new correlation id', () => {
-        let req = { url: '/api/path' }
-        let res = {}
+        const req = { url: '/api/path' }
+        const res = {}
 
         SUT(req, res, next)
 
@@ -60,10 +60,10 @@ describe('express-nemo-correlation-id', () => {
     context('when client supply a correlation id in request', () => {
       it('should use correlation id from querystring', () => {
         const expected = 'AbC123'
-        let req = {
+        const req = {
           url: `/api/path?foo=bar&correlationId=${expected}`
         }
-        let res = {}
+        const res = {}
 
         SUT(req, res, next)
 

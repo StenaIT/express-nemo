@@ -1,11 +1,13 @@
 {
   "name": "express-nemo-route-not-found",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A middleware for express to add a route that handles all not found routes",
   "main": "index.js",
   "scripts": {
     "test": "mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --slow 10",
-    "test:watch": "mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --watch --slow 10"
+    "test:watch": "mocha './{,!(node_modules)/**/}*.spec.js' --reporter spec --watch --slow 10",
+    "lint": "eslint --ext .js .",
+    "lint-fix": "eslint --fix --ext .js ."
   },
   "repository": {
     "type": "git",
@@ -27,14 +29,14 @@
   },
   "homepage": "https://github.com/StenaIT/express-nemo#readme",
   "devDependencies": {
-    "chai": "^4.2.0",
-    "eslint": "^6.7.2",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.19.1",
-    "eslint-plugin-node": "^10.0.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "mocha": "^6.2.2",
-    "prettier-eslint": "^9.0.1"
+    "chai": "^4.3.4",
+    "eslint": "^8.0.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-chai-friendly": "^0.7.2",
+    "eslint-plugin-import": "^2.25.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "mocha": "^9.1.2",
+    "prettier-eslint": "^13.0.0"
   }
 }

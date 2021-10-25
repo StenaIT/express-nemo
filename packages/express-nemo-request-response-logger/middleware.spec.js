@@ -27,7 +27,7 @@ describe('express-nemo-request-response-logger', () => {
   context('valid configuration', () => {
     context('minimum configuration', () => {
       it('returns middleware with options exposed', () => {
-        let mw = middleware()
+        const mw = middleware()
         expect(mw.options).to.not.be.undefined
       })
     })
@@ -43,7 +43,7 @@ describe('express-nemo-request-response-logger', () => {
       const res = {
         statusCode: 200
       }
-      let logEvent = factory(req, res)
+      const logEvent = factory(req, res)
       expect(logEvent).to.equal('GET / - HTTP 200')
     })
   })
@@ -52,7 +52,7 @@ describe('express-nemo-request-response-logger', () => {
     let nextCalled
     let callArgs
     let SUT
-    let req = {
+    const req = {
       context: {
         logger: {
           debug: (...args) => {
@@ -61,7 +61,7 @@ describe('express-nemo-request-response-logger', () => {
         }
       }
     }
-    let res = {}
+    const res = {}
 
     const next = () => {
       nextCalled = true
@@ -90,11 +90,11 @@ describe('express-nemo-request-response-logger', () => {
     it('calls the log event factory with request and response', () => {
       let calledCorrectly
 
-      mw = middleware({
+      const sut = middleware({
         logEventFactory: (request, response) =>
           (calledCorrectly = request === req && response === res)
       })
-      mw(req, res, next)
+      sut(req, res, next)
       expect(calledCorrectly).to.be.true
     })
   })

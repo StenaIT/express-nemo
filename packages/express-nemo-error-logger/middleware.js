@@ -1,6 +1,15 @@
 const defaults = {
   createLogger: () => console,
-  eventTemplate: (err, req) => `Unandled error: ${err.name}, ${err.message}`,
+  eventTemplate: (err, req) => {
+    const time =
+      req.context &&
+      req.context.performance &&
+      req.context.performance.timing
+        ? ` (time ${req.context.performance.timing.time} s.ms)`
+        : ''
+
+    return `Unandled error: ${err.name}, ${err.message}${time}`
+  },
   excludeErrors: []
 }
 
@@ -17,7 +26,7 @@ module.exports = opt => {
     }
 
     requiredNotNullOptions.forEach(option => {
-      if (!options.hasOwnProperty(option)) {
+      if (!Object.prototype.hasOwnProperty.call(options, option)) {
         throw new Error(`[Options] Missing '${option}' property`)
       } else if (options[option] === null) {
         throw new Error(`[Options] Null on '${option}' property is not allowed`)
@@ -26,7 +35,7 @@ module.exports = opt => {
 
     requiredfunctionOptions.forEach(option => {
       if (
-        options.hasOwnProperty(option) &&
+        Object.prototype.hasOwnProperty.call(options, option) &&
         typeof options[option] !== 'function'
       ) {
         throw new Error(`[Options] ${option} is not a function`)
@@ -46,7 +55,7 @@ module.exports = opt => {
   }
 
   const middleware = (err, req, res, next) => {
-    const logger = getLogger(req) || options.createLogger(err, req)
+    const logger = getLogger(req) || options.createLogger(req, res)
     const ignoreError = options.excludeErrors.includes(err.name)
     if (!ignoreError) {
       logger.error(options.eventTemplate(err, req))

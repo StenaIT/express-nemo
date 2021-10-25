@@ -1,11 +1,11 @@
 const expect = require('chai').expect
 const middleware = require('./middleware')
 
-describe('express-nemo-performance', () => {
+describe('express-nemo-performance', function () {
   context('valid configuration', () => {
     context('minimum configuration', () => {
       it('returns middleware with options exposed', () => {
-        let mw = middleware()
+        const mw = middleware()
         expect(mw.options).to.not.be.undefined
       })
     })
@@ -15,28 +15,31 @@ describe('express-nemo-performance', () => {
     context('middleware is called', () => {
       let nextCalled = false
       let SUT
+      let next
 
-      const next = () => {
-        nextCalled = true
-      }
-
-      beforeEach(() => {
+      beforeEach(function () {
         nextCalled = false
         SUT = middleware().start
       })
 
-      it('should always call next', () => {
-        let req = { url: '/api/path' }
-        let res = {}
+      it('should always call next', function () {
+        const req = { url: '/api/path' }
+        const res = {}
+        next = () => {
+          nextCalled = true
+        }
 
         SUT(req, res, next)
 
         expect(nextCalled).to.be.true
       })
 
-      it('should add performance tracking id to context', () => {
-        let req = { url: '/api/path' }
-        let res = {}
+      it('should add performance tracking id to context', function () {
+        const req = { url: '/api/path' }
+        const res = {}
+        next = () => {
+          nextCalled = true
+        }
 
         SUT(req, res, next)
 
@@ -48,108 +51,116 @@ describe('express-nemo-performance', () => {
     })
   })
 
-  context('end', () => {
-    context('with no error', () => {
-      context('middleware is called', () => {
-        let nextCalled = false
+  context('end', function () {
+    context('with no error', function () {
+      context('middleware is called', function () {
+        let endNextCalled = false
         let start
         let SUT
+        let req
+        let res
 
-        const next = () => {
-          nextCalled = true
-        }
-
-        beforeEach(() => {
-          nextCalled = false
-          let mw = middleware()
+        beforeEach(function () {
+          req = { url: '/api/path' }
+          res = {}
+          endNextCalled = false
+          const mw = middleware()
           start = mw.start
-          SUT = mw.end[1] // handler with req as first arg
+          SUT = mw.end
         })
 
-        it('should always call next', () => {
-          let req = { url: '/api/path' }
-          let res = {}
-          start(req, res, next)
+        it('should always call next', function () {
+          const nextEnd = () => {
+            endNextCalled = true
+          }
 
-          SUT(req, res, next)
+          start(req, res)
+          SUT(req, res, nextEnd)
 
-          expect(nextCalled).to.be.true
+          expect(endNextCalled).to.be.true
         })
 
-        context('when tracking id is not set', () => {
-          it('should not add performance timing to context', () => {
-            let req = { url: '/api/path' }
-            let res = {}
+        context('when tracking id is not set', function () {
+          it('should not add performance timing to context', function () {
+            const nextEnd = () => {
+            }
 
-            SUT(req, res, next)
-
+            SUT(req, res, nextEnd)
             expect(req.context).to.be.an('undefined')
           })
         })
 
-        context('when tracking id is set', () => {
-          it('should add performance timing to context', () => {
-            let req = { url: '/api/path' }
-            let res = {}
-            start(req, res, next)
-
-            SUT(req, res, next)
-
+        context('when tracking id is set', function () {
+          it('should add performance timing to context', function () {
+            const nextEnd = () => {
+            }
+            start(req, res)
+            SUT(req, res, nextEnd)
             expect(req.context.performance).to.not.be.an('undefined')
             expect(req.context.performance).to.not.be.null
             expect(req.context.performance.timing).to.not.be.an('undefined')
             expect(req.context.performance.timing).to.not.be.null
+            expect(req.context.performance.trackingId).to.be.null
           })
         })
       })
     })
 
-    context('with error', () => {
-      context('middleware is called', () => {
+    context('with error', function () {
+      context('middleware is called', function () {
         let nextCalled = false
         let start
         let SUT
+        let req
+        let res
 
-        const next = err => {
-          nextCalled = !!err
-        }
-
-        beforeEach(() => {
+        beforeEach(function () {
+          req = { url: '/api/path' }
+          res = {}
           nextCalled = false
-          let mw = middleware()
+          const mw = middleware()
+          SUT = mw.error
           start = mw.start
-          SUT = mw.end[0] // handler with err as first arg
         })
 
-        it('should always call next', () => {
-          let req = { url: '/api/path' }
-          let res = {}
-          start(req, res, next)
+        it('should always call next', function () {
+          const nextError = () => {
+            nextCalled = true
+          }
 
-          SUT({ err: true }, req, res, next)
-
+          SUT({ err: true }, req, res, nextError)
           expect(nextCalled).to.be.true
         })
 
+        it('should always call next with exception', function () {
+          let currentError = {}
+          const nextError = (e) => {
+            currentError = e
+          }
+
+          const expected = { err: true }
+
+          start(req, res)
+          SUT(expected, req, res, nextError)
+          expect(expected).to.be.equal(currentError)
+        })
+
         context('when tracking id is not set', () => {
-          it('should not add performance timing to context', () => {
-            let req = { url: '/api/path' }
-            let res = {}
-
-            SUT({ err: true }, req, res, next)
-
+          it('should not add performance timing to context', function () {
+            const nextError = () => {}
+            // start(req, res)
+            SUT({ err: true }, req, res, nextError)
             expect(req.context).to.be.an('undefined')
           })
         })
 
         context('when tracking id is set', () => {
-          it('should add performance timing to context', () => {
-            let req = { url: '/api/path' }
-            let res = {}
-            start(req, res, next)
+          it('should add performance timing to context', function () {
+            const nextError = () => {
+            }
 
-            SUT({ err: true }, req, res, next)
-
+            start(req, res)
+            SUT({ err: true }, req, res, nextError)
             expect(req.context.performance).to.not.be.an('undefined')
             expect(req.context.performance).to.not.be.null
             expect(req.context.performance.timing).to.not.be.an('undefined')

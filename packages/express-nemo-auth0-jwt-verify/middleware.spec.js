@@ -13,30 +13,31 @@ function UnauthorizedError (code, error) {
   this.inner = error
 }
 
-describe('express-nemo-auth0-jwt-verify', () => {
-  context('invalid configuration', () => {
-    context('when no jwt configuration is provided', () => {
-      it('throws an error', () => {
+describe('express-nemo-auth0-jwt-verify', function () {
+  context('invalid configuration', function () {
+    context('when no jwt configuration is provided', function () {
+      it('throws an error', function () {
         expect(() => middleware()).to.throw()
       })
     })
   })
 
-  context('valid configuration', () => {
-    context('minimum configuration', () => {
-      it('returns middleware with options exposed', () => {
+  context('valid configuration', function () {
+    context('minimum configuration', function () {
+      it('returns middleware with options exposed', function () {
         const expectedOptions = {
           jwt: {
-            secret: 'a secret'
+            secret: 'a secret',
+            algorithms: ['HS256']
           }
         }
-        let mw = middleware(expectedOptions)
-        expect(mw.options).to.deep.equal(expectedOptions)
+        const mw = middleware(expectedOptions)
+        expect(mw.options).to.deep.equal(expectedOptions, `Not equal ${mw.options}`)
       })
     })
   })
 
-  context('middleware is called', () => {
+  context('middleware is called', function () {
     let req
     let res
     let nextError
@@ -44,7 +45,7 @@ describe('express-nemo-auth0-jwt-verify', () => {
     let infoMessages = []
     let SUT
 
-    beforeEach(() => {
+    beforeEach(function () {
       req = {
         context: {
           logger: {
@@ -69,7 +70,8 @@ describe('express-nemo-auth0-jwt-verify', () => {
 
       SUT = middleware({
         jwt: {
-          secret: 'a secret'
+          secret: 'a secret',
+          algorithms: ['HS256']
         }
       })
 
@@ -82,22 +84,26 @@ describe('express-nemo-auth0-jwt-verify', () => {
       }
     })
 
-    it('calls next', done => {
+    it('calls next', function (done) {
       const next = () => done()
 
       SUT(req, res, next)
     })
 
-    it('logs messages', done => {
+    it('logs messages', function (done) {
       const next = () => {
         expect(logMessages.length).to.be.above(1)
+        expect(logMessages).to.be.deep.equal([
+          '[auth0-jwt] Starting authentication process',
+          '[auth0-jwt] Successfully authenticated!']
+        )
         done()
       }
       SUT(req, res, next)
     })
 
-    context('without logger', () => {
-      it('does not log any messages', done => {
+    context('without logger', function () {
+      it('does not log any messages', function (done) {
         req = {}
         const next = () => {
           expect(logMessages.length).to.be.equal(0)
@@ -108,7 +114,7 @@ describe('express-nemo-auth0-jwt-verify', () => {
       })
     })
 
-    context('failed authentication', () => {
+    context('failed authentication', function () {
       beforeEach(() => {
         SUT.auth = (req, res, next) => {
           setTimeout(() => {
@@ -117,7 +123,7 @@ describe('express-nemo-auth0-jwt-verify', () => {
         }
       })
 
-      it('logs failed authenticaitons with info', done => {
+      it('logs failed authenticaitons with info', function (done) {
         const next = () => {
           expect(
             infoMessages.includes(
@@ -130,7 +136,7 @@ describe('express-nemo-auth0-jwt-verify', () => {
         SUT(req, res, next)
       })
 
-      it('calls next with error', done => {
+      it('calls next with error', function (done) {
         const next = nextError => {
           expect(nextError.name).to.equal('UnauthorizedError')
           done()
@@ -139,7 +145,7 @@ describe('express-nemo-auth0-jwt-verify', () => {
         SUT(req, res, next)
       })
 
-      it('sets the HTTP status code to 401', done => {
+      it('sets the HTTP status code to 401', function (done) {
         const next = () => {
           expect(res.statusCode).to.equal(401)
           done()
@@ -149,7 +155,7 @@ describe('express-nemo-auth0-jwt-verify', () => {
       })
     })
 
-    context('successful authentication', () => {
+    context('successful authentication', function () {
       beforeEach(() => {
         SUT.auth = (req, res, next) => {
           setTimeout(() => {
@@ -158,7 +164,7 @@ describe('express-nemo-auth0-jwt-verify', () => {
         }
       })
 
-      it('logs successful authenticaitons', done => {
+      it('logs successful authenticaitons', function (done) {
         const next = () => {
           expect(
             logMessages.includes('[auth0-jwt] Successfully authenticated!')
@@ -169,7 +175,7 @@ describe('express-nemo-auth0-jwt-verify', () => {
         SUT(req, res, next)
       })
 
-      it('calls next without error', done => {
+      it('calls next without error', function (done) {
         const next = () => {
           expect(nextError === undefined).to.equal(true)
           done()
@@ -178,7 +184,7 @@ describe('express-nemo-auth0-jwt-verify', () => {
         SUT(req, res, next)
       })
 
-      it('preserves the HTTP status code', done => {
+      it('preserves the HTTP status code', function (done) {
         const next = () => {
           expect(res.statusCode).to.equal(200)
           done()

@@ -12,11 +12,18 @@ declare -r package_dir="./packages/${name:?}"
 
 mkdir "${package_dir:?}"
 echo '{
-  "plugins": ["standard"],
-  "rules": {
-    "jsx-quotes": ["error", "prefer-single"]
+  "plugins": [
+    "chai-friendly"
+  ],
+  "env": {
+    "mocha": true,
+    "node": true
   },
-  "extends": ["standard"]
+  "rules": {
+    "jsx-quotes": ["error", "prefer-single"],
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+  },
+  "extends": ["standard", "plugin:chai-friendly/recommended"]
 }
 ' > "${package_dir:?}/.eslintrc.json" || exit
 
@@ -24,10 +31,20 @@ cd "${package_dir:?}" || exit
 npm init
 
 echo 'Setting up linters'
-npm install --save-dev eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node prettier-eslint
+npm install --save-dev \
+      eslint \
+      eslint-config-standard \
+      eslint-plugin-promise \
+      eslint-plugin-import \
+      eslint-plugin-chai-friendly \
+      eslint-plugin-node \
+      prettier-eslint
 
 echo 'Setting up test harness'
-npm install --save-dev mocha chai
+npm install --save-dev \
+      mocha \
+      chai
+
 cd -
 
 echo 'Creating boilerplate'

@@ -10,7 +10,6 @@ const expressHttpContextErrorResponse = require('../../packages/express-nemo-err
 const expressHttpContextErrorLogger = require('../../packages/express-nemo-error-logger')
 const expressHttpPingRoute = require('../../packages/express-nemo-route-ping')
 const expressHttpHealthRoute = require('../../packages/express-nemo-route-health')
-const expressHttpGraphqlRoute = require('../../packages/express-nemo-route-graphql')
 const expressHttpNotFoundRoute = require('../../packages/express-nemo-route-not-found')
 const performanceMonitor = expressHttpContextPerformace()
 
@@ -49,36 +48,53 @@ router.get('/error', (req, res, next) => {
 
 const server = express()
 
+const requestResponseLogger = expressHttpContextRequestResponseLogger({
+  logEventFactory: (req, res) => {
+    const time =
+      req.context &&
+      req.context.performance &&
+      req.context.performance.timing
+        ? ` (time ${req.context.performance.timing.time} s.ms)`
+        : ''
+    return `${req.method} ${req.url} - HTTP ${res.statusCode}${time}`
+  }
+})
+
+const createEndHandler = (options, middlewares) => {
+  const endHandler = (req, res, next) => {
+    if (options.postHandlerOptions) {
+      req.context.postHandlerOptions = options.postHandlerOptions
+    }
+
+    req.on('end', () => {
+      if(!middlewares) {
+        console.log('Did you forget to put end handlers!')
+      }
+
+      for (let i = 0; i < middlewares.length; i++) {
+        middlewares[i](req,res, () => {})
+      }
+    })
+
+    next();
+  }
+
+  return endHandler;
+}
+
 server
   .use(performanceMonitor.start)
   .use(expressHttpContextCorrelationId())
   .use(expressHttpContextLogger({ loggerFactory: (req, res) => console }))
+  .use( createEndHandler({}, [performanceMonitor.end, requestResponseLogger] ))
 
   .use('/', router)
   .get('/ping', expressHttpPingRoute())
   .get('/health', expressHttpHealthRoute({ checks: [] }))
-  .post(
-    '/graphql',
-    bodyParser.json(),
-    expressHttpGraphqlRoute({ graphqlSchema: schema })
-  )
 
+  .use(performanceMonitor.error)
   .use(expressHttpNotFoundRoute())
-  .use(performanceMonitor.end)
   .use(expressHttpContextErrorLogger())
   .use(expressHttpContextErrorResponse())
-  .use(
-    expressHttpContextRequestResponseLogger({
-      logEventFactory: (req, res) => {
-        const time =
-          req.context &&
-          req.context.performance &&
-          req.context.performance.timing
-            ? ` (time ${req.context.performance.timing.time} s.ms)`
-            : ''
-        return `${req.method} ${req.url} - HTTP ${res.statusCode}${time}`
-      }
-    })
-  )
 
 server.listen(PORT, () => console.log(`Server is now running on port ${PORT}`))
