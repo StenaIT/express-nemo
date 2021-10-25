@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+source ./scripts/common.sh
+
+npm_cmd_on_all_packages audit
